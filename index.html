@@ -5,10 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Лабораторная работа №6</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Скрипт для предотвращения "мерцания" темы при загрузке -->
+    <script>
+        // Проверяем сохраненную тему и применяем ее до загрузки DOM
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
 </head>
 <body>
     <header>
-        <h1>Иванов Иван Иванович - Лабораторная работа №6</h1>
+        <div class="header-content">
+            <h1>Жетписов Ансат - Лабораторная работа №6</h1>
+            <button id="themeToggle" class="theme-toggle" aria-label="Переключить тему">
+                <span class="theme-icon light">☀️</span>
+                <span class="theme-icon dark">🌙</span>
+            </button>
+        </div>
     </header>
 
     <main>

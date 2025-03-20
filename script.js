@@ -6,7 +6,25 @@ const refreshButton = document.getElementById('refreshGallery');
 const temperatureForm = document.getElementById('temperatureForm');
 const submitButton = document.getElementById('submitTemp');
 const toastContainer = document.getElementById('toastContainer');
+const themeToggle = document.getElementById('themeToggle');
 
+// Функция для переключения темы
+function toggleTheme() {
+    // Получаем текущую тему
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    
+    // Переключаем на другую тему
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    // Устанавливаем новую тему
+    document.documentElement.setAttribute('data-theme', newTheme);
+    
+    // Сохраняем выбор в localStorage
+    localStorage.setItem('theme', newTheme);
+}
+
+// Обработчик для кнопки переключения темы
+themeToggle.addEventListener('click', toggleTheme);
 
 function showToast(message, type = 'success', duration = 5000) {
     const toast = document.createElement('div');
@@ -157,10 +175,15 @@ async function sendTemperatureData(roomNumber, temperature) {
 // ======================= Обработчики событий =======================
 // при загрузке страницы загружаем изображения
 window.addEventListener('DOMContentLoaded', () => {
+    // Загружаем изображения
     fetchImages();
+    
+    // Устанавливаем правильную тему на основе localStorage
+    // (По факту это уже сделано в скрипте в head, но оставляем для полноты)
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
 });
 
-// обработчик для кнопки обновления галереи
 refreshButton.addEventListener('click', () => {
     fetchImages();
 });

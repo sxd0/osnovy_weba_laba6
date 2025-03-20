@@ -1,3 +1,46 @@
+/* CSS переменные для тем */
+:root {
+    /* Светлая тема (по умолчанию) */
+    --background-color: #f5f5f5;
+    --text-color: #333;
+    --header-color: #2c3e50;
+    --section-title-color: #3498db;
+    --section-bg: white;
+    --section-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --border-color: #e0e0e0;
+    --caption-bg: #f8f8f8;
+    --help-text-color: #7f8c8d;
+    --empty-message-color: #7f8c8d;
+    --input-border: #ddd;
+    --button-primary-bg: #3498db;
+    --button-primary-hover: #2980b9;
+    --button-submit-bg: #2ecc71;
+    --button-submit-hover: #27ae60;
+    --button-disabled-bg: #95a5a6;
+    --spinner-border: rgba(0, 0, 0, 0.1);
+}
+
+/* Темная тема */
+[data-theme="dark"] {
+    --background-color: #1a1a2e;
+    --text-color: #e1e1e1;
+    --header-color: #3498db;
+    --section-title-color: #64b5f6;
+    --section-bg: #16213e;
+    --section-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    --border-color: #2c3e50;
+    --caption-bg: #0f3460;
+    --help-text-color: #aaa;
+    --empty-message-color: #95a5a6;
+    --input-border: #2c3e50;
+    --button-primary-bg: #2980b9;
+    --button-primary-hover: #3498db;
+    --button-submit-bg: #27ae60;
+    --button-submit-hover: #2ecc71;
+    --button-disabled-bg: #718093;
+    --spinner-border: rgba(255, 255, 255, 0.1);
+}
+
 /* основные стили */
 * {
     margin: 0;
@@ -9,35 +52,73 @@ body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
     padding: 20px;
-    background-color: #f5f5f5;
-    color: #333;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 header {
-    text-align: center;
     margin-bottom: 30px;
+    padding: 15px;
+    background-color: var(--section-bg);
+    border-radius: 8px;
+    box-shadow: var(--section-shadow);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 h1 {
-    color: #2c3e50;
+    color: var(--header-color);
 }
 
 h2 {
-    color: #3498db;
+    color: var(--section-title-color);
     margin-bottom: 20px;
 }
 
 section {
-    background: white;
+    background: var(--section-bg);
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--section-shadow);
     padding: 20px;
     margin-bottom: 30px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+/* Кнопка переключения темы */
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+.theme-icon {
+    display: inline-block;
+}
+
+/* Показываем только соответствующую иконку для каждой темы */
+[data-theme="light"] .theme-icon.dark,
+[data-theme="dark"] .theme-icon.light {
+    display: none;
 }
 
 /* стили для галереи */
 .refresh-btn {
-    background-color: #3498db;
+    background-color: var(--button-primary-bg);
     color: white;
     border: none;
     padding: 10px 15px;
@@ -48,7 +129,7 @@ section {
 }
 
 .refresh-btn:hover {
-    background-color: #2980b9;
+    background-color: var(--button-primary-hover);
 }
 
 .gallery {
@@ -81,7 +162,7 @@ section {
 }
 
 .gallery-item {
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     overflow: hidden;
     display: flex;
@@ -97,14 +178,14 @@ section {
 
 .gallery-item .caption {
     padding: 10px;
-    background: #f8f8f8;
+    background: var(--caption-bg);
     flex-grow: 1;
 }
 
 .empty-gallery {
     text-align: center;
     padding: 50px 0;
-    color: #7f8c8d;
+    color: var(--empty-message-color);
     font-style: italic;
 }
 
@@ -120,9 +201,9 @@ section {
 .spinner {
     width: 50px;
     height: 50px;
-    border: 5px solid rgba(0, 0, 0, 0.1);
+    border: 5px solid var(--spinner-border);
     border-radius: 50%;
-    border-top-color: #3498db;
+    border-top-color: var(--button-primary-bg);
     animation: spin 1s ease-in-out infinite;
     margin-bottom: 15px;
 }
@@ -145,19 +226,21 @@ section {
 .form-group input {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--input-border);
     border-radius: 4px;
     font-size: 16px;
+    background-color: var(--section-bg);
+    color: var(--text-color);
 }
 
 .help-text {
     font-size: 12px;
-    color: #7f8c8d;
+    color: var(--help-text-color);
     margin-top: 5px;
 }
 
 .submit-btn {
-    background-color: #2ecc71;
+    background-color: var(--button-submit-bg);
     color: white;
     border: none;
     padding: 10px 15px;
@@ -167,11 +250,11 @@ section {
 }
 
 .submit-btn:hover {
-    background-color: #27ae60;
+    background-color: var(--button-submit-hover);
 }
 
 .submit-btn:disabled {
-    background-color: #95a5a6;
+    background-color: var(--button-disabled-bg);
     cursor: not-allowed;
 }
 
