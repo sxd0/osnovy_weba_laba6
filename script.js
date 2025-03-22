@@ -1,38 +1,30 @@
-const BASE_URL = 'http://194.67.93.117:80';
+const serverUrl = 'http://194.67.93.117:80';
 
 const galleryContainer = document.getElementById('galleryContainer');
 const loader = document.getElementById('loader');
 const refreshButton = document.getElementById('refreshGallery');
-const temperatureForm = document.getElementById('temperatureForm');
+const tempForm = document.getElementById('temperatureForm');
 const submitButton = document.getElementById('submitTemp');
 const toastContainer = document.getElementById('toastContainer');
 const themeToggle = document.getElementById('themeToggle');
 
-// Функция для переключения темы
-function toggleTheme() {
-    // Получаем текущую тему
+function changeTheme() {
     const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-    
-    // Переключаем на другую тему
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     
-    // Устанавливаем новую тему
     document.documentElement.setAttribute('data-theme', newTheme);
-    
-    // Сохраняем выбор в localStorage
     localStorage.setItem('theme', newTheme);
 }
 
-// Обработчик для кнопки переключения темы
-themeToggle.addEventListener('click', toggleTheme);
+themeToggle.addEventListener('click', changeTheme);
 
-function showToast(message, type = 'success', duration = 5000) {
+function showToast(message, type = 'success') {
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     
     toast.innerHTML = `
-        <div class="toast-message">${message}</div>
-        <button class="toast-close" aria-label="Закрыть уведомление">✕</button>
+        <div>${message}</div>
+        <button class="toast-close">✕</button>
     `;
     
     toastContainer.appendChild(toast);
@@ -43,68 +35,50 @@ function showToast(message, type = 'success', duration = 5000) {
     
     const closeButton = toast.querySelector('.toast-close');
     closeButton.addEventListener('click', () => {
-        closeToast(toast);
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
     });
     
-    if (duration > 0) {
-        setTimeout(() => {
-            closeToast(toast);
-        }, duration);
-    }
-    
-    return toast;
-}
-
-function closeToast(toast) {
-    // анимация исчезновения
-    toast.classList.remove('show');
-    
-    // удаляем из DOM после завершения анимации
     setTimeout(() => {
-        toast.remove();
-    }, 300); // время должно соответствовать transition в CSS
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 5000);
 }
 
-async function fetchImages(retries = 3, delay = 1000) {
-    // показываем загрузчик
+async function loadImages(retries = 3) {
     galleryContainer.innerHTML = '';
     galleryContainer.appendChild(loader);
     
     try {
-        // отправляем запрос на сервер
-        const response = await fetch(`${BASE_URL}/images`);
+        const response = await fetch(`${serverUrl}/images`);
         
-        // проверяем статус ответа
         if (!response.ok) {
-            throw new Error(`Ошибка HTTP: ${response.status}`);
+            throw new Error(`Ошибка: ${response.status}`);
         }
         
-        // получаем данные в формате JSON
         const images = await response.json();
-        
-        // отображаем изображения или сообщение об их отсутствии
-        displayImages(images);
+        showImages(images);
     } catch (error) {
-        console.error('Ошибка при загрузке изображений:', error);
+        console.error('Ошибка при загрузке:', error);
         
-        // если остались попытки, повторяем запрос после задержки
         if (retries > 0) {
             setTimeout(() => {
-                fetchImages(retries - 1, delay);
-            }, delay);
+                loadImages(retries - 1);
+            }, 1000);
         } else {
-            // если все попытки исчерпаны, показываем сообщение об ошибке
             galleryContainer.innerHTML = '';
-            showToast('Не удалось загрузить изображения. Пожалуйста, попробуйте позже.', 'error');
+            showToast('Не удалось загрузить изображения', 'error');
         }
     }
 }
 
-function displayImages(images) {
-    // удаляем загрузчик
+function showImages(images) {
     galleryContainer.innerHTML = '';
     
-    // если массив пустой, показываем сообщение
     if (!images || images.length === 0) {
         const emptyMessage = document.createElement('div');
         emptyMessage.className = 'empty-gallery';
@@ -113,28 +87,31 @@ function displayImages(images) {
         return;
     }
     
-    // создаем контейнер-сетку для изображений
-    const galleryGrid = document.createElement('div');
-    galleryGrid.className = 'gallery-grid';
+    const grid = document.createElement('div');
+    grid.className = 'gallery-grid';
     
-    // добавляем каждое изображение в сетку
-    images.forEach(image => {
+    for (let i = 0; i < images.length; i++) {
+        const image = images[i];
         const item = document.createElement('div');
         item.className = 'gallery-item';
         
-        item.innerHTML = `
-            <img src="${image.url}" alt="${image.title || 'Изображение галереи'}">
-            <div class="caption">${image.title || 'Без названия'}</div>
-        `;
+        const img = document.createElement('img');
+        img.src = image.url;
+        img.alt = image.title || 'Изображение';
         
-        galleryGrid.appendChild(item);
-    });
+        const caption = document.createElement('div');
+        caption.className = 'caption';
+        caption.textContent = image.title || 'Без названия';
+        
+        item.appendChild(img);
+        item.appendChild(caption);
+        grid.appendChild(item);
+    }
     
-    // добавляем сетку в контейнер галереи
-    galleryContainer.appendChild(galleryGrid);
+    galleryContainer.appendChild(grid);
 }
 
-async function sendTemperatureData(roomNumber, temperature) {
+async function sendTemperature(roomNumber, temperature) {
     submitButton.disabled = true;
     
     try {
@@ -143,8 +120,7 @@ async function sendTemperatureData(roomNumber, temperature) {
             temp: parseFloat(temperature)
         };
         
-        // отправляем POST-запрос
-        const response = await fetch(`${BASE_URL}/temp`, {
+        const response = await fetch(`${serverUrl}/temp`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -155,48 +131,32 @@ async function sendTemperatureData(roomNumber, temperature) {
         const result = await response.json();
         
         if (!response.ok) {
-            throw new Error(result.message || 'Ошибка при отправке данных');
+            throw new Error(result.message || 'Ошибка при отправке');
         }
         
-        showToast(result.message || 'Данные успешно отправлены', 'success');
-        
-        temperatureForm.reset();
+        showToast(result.message || 'Данные успешно отправлены');
+        tempForm.reset();
     } catch (error) {
-        console.error('Ошибка при отправке данных:', error);
-        
-        // показываем сообщение об ошибке
-        showToast(error.message || 'Произошла ошибка при отправке данных', 'error');
+        console.error('Ошибка:', error);
+        showToast(error.message || 'Ошибка при отправке данных', 'error');
     } finally {
-        // разблокируем форму
         submitButton.disabled = false;
     }
 }
 
-// ======================= Обработчики событий =======================
-// при загрузке страницы загружаем изображения
-window.addEventListener('DOMContentLoaded', () => {
-    // Загружаем изображения
-    fetchImages();
-    
-    // Устанавливаем правильную тему на основе localStorage
-    // (По факту это уже сделано в скрипте в head, но оставляем для полноты)
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
+window.addEventListener('load', () => {
+    loadImages();
 });
 
 refreshButton.addEventListener('click', () => {
-    fetchImages();
+    loadImages();
 });
 
-// обработчик отправки формы температуры
-temperatureForm.addEventListener('submit', (event) => {
-    // предотвращаем стандартное поведение формы
+tempForm.addEventListener('submit', (event) => {
     event.preventDefault();
     
-    // получаем значения из полей формы
     const roomNumber = document.getElementById('roomNumber').value;
     const temperature = document.getElementById('temperature').value;
     
-    // отправляем данные
-    sendTemperatureData(roomNumber, temperature);
+    sendTemperature(roomNumber, temperature);
 });

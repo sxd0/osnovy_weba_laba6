@@ -1,47 +1,25 @@
-/* CSS переменные для тем */
 :root {
-    /* Светлая тема (по умолчанию) */
-    --background-color: #f5f5f5;
+    --bg-color: #f5f5f5;
     --text-color: #333;
     --header-color: #2c3e50;
-    --section-title-color: #3498db;
+    --primary-color: #3498db;
     --section-bg: white;
-    --section-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    --border-color: #e0e0e0;
-    --caption-bg: #f8f8f8;
-    --help-text-color: #7f8c8d;
-    --empty-message-color: #7f8c8d;
-    --input-border: #ddd;
-    --button-primary-bg: #3498db;
-    --button-primary-hover: #2980b9;
-    --button-submit-bg: #2ecc71;
-    --button-submit-hover: #27ae60;
-    --button-disabled-bg: #95a5a6;
-    --spinner-border: rgba(0, 0, 0, 0.1);
+    --border-color: #ddd;
+    --success-color: #2ecc71;
+    --error-color: #e74c3c;
 }
 
-/* Темная тема */
 [data-theme="dark"] {
-    --background-color: #1a1a2e;
-    --text-color: #e1e1e1;
+    --bg-color: #222;
+    --text-color: #eee;
     --header-color: #3498db;
-    --section-title-color: #64b5f6;
-    --section-bg: #16213e;
-    --section-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    --border-color: #2c3e50;
-    --caption-bg: #0f3460;
-    --help-text-color: #aaa;
-    --empty-message-color: #95a5a6;
-    --input-border: #2c3e50;
-    --button-primary-bg: #2980b9;
-    --button-primary-hover: #3498db;
-    --button-submit-bg: #27ae60;
-    --button-submit-hover: #2ecc71;
-    --button-disabled-bg: #718093;
-    --spinner-border: rgba(255, 255, 255, 0.1);
+    --primary-color: #64b5f6;
+    --section-bg: #333;
+    --border-color: #444;
+    --success-color: #27ae60;
+    --error-color: #c0392b;
 }
 
-/* основные стили */
 * {
     margin: 0;
     padding: 0;
@@ -50,25 +28,19 @@
 
 body {
     font-family: Arial, sans-serif;
-    line-height: 1.6;
-    padding: 20px;
-    background-color: var(--background-color);
+    background-color: var(--bg-color);
     color: var(--text-color);
-    transition: background-color 0.3s, color 0.3s;
+    padding: 15px;
 }
 
 header {
-    margin-bottom: 30px;
-    padding: 15px;
-    background-color: var(--section-bg);
-    border-radius: 8px;
-    box-shadow: var(--section-shadow);
-}
-
-.header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: var(--section-bg);
+    border-radius: 5px;
 }
 
 h1 {
@@ -76,98 +48,57 @@ h1 {
 }
 
 h2 {
-    color: var(--section-title-color);
-    margin-bottom: 20px;
+    color: var(--primary-color);
+    margin-bottom: 15px;
 }
 
 section {
     background: var(--section-bg);
-    border-radius: 8px;
-    box-shadow: var(--section-shadow);
-    padding: 20px;
-    margin-bottom: 30px;
-    transition: background-color 0.3s, box-shadow 0.3s;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
 }
 
-/* Кнопка переключения темы */
-.theme-toggle {
+#themeToggle {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 24px;
-    padding: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s;
+    font-size: 20px;
 }
 
-.theme-toggle:hover {
-    transform: scale(1.1);
-}
-
-.theme-icon {
+.light-icon, .dark-icon {
     display: inline-block;
 }
 
-/* Показываем только соответствующую иконку для каждой темы */
-[data-theme="light"] .theme-icon.dark,
-[data-theme="dark"] .theme-icon.light {
+[data-theme="light"] .dark-icon,
+[data-theme="dark"] .light-icon {
     display: none;
 }
 
-/* стили для галереи */
-.refresh-btn {
-    background-color: var(--button-primary-bg);
+#refreshGallery {
+    background-color: var(--primary-color);
     color: white;
     border: none;
-    padding: 10px 15px;
+    padding: 8px 12px;
     border-radius: 4px;
     cursor: pointer;
-    margin-bottom: 20px;
-    font-size: 14px;
+    margin-bottom: 15px;
 }
 
-.refresh-btn:hover {
-    background-color: var(--button-primary-hover);
-}
-
-.gallery {
-    min-height: 200px;
-    position: relative;
+#refreshGallery:hover {
+    opacity: 0.9;
 }
 
 .gallery-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-}
-
-@media (max-width: 1200px) {
-    .gallery-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (max-width: 900px) {
-    .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 600px) {
-    .gallery-grid {
-        grid-template-columns: 1fr;
-    }
+    gap: 15px;
 }
 
 .gallery-item {
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 5px;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
 }
 
 .gallery-item img {
@@ -177,42 +108,39 @@ section {
 }
 
 .gallery-item .caption {
-    padding: 10px;
-    background: var(--caption-bg);
-    flex-grow: 1;
+    padding: 8px;
+    background-color: var(--section-bg);
 }
 
 .empty-gallery {
     text-align: center;
-    padding: 50px 0;
-    color: var(--empty-message-color);
+    padding: 30px 0;
+    color: var(--text-color);
     font-style: italic;
 }
 
-/* стили для загрузчика */
 .loader {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 50px 0;
+    padding: 30px 0;
 }
 
 .spinner {
-    width: 50px;
-    height: 50px;
-    border: 5px solid var(--spinner-border);
+    width: 40px;
+    height: 40px;
+    border: 4px solid #eee;
     border-radius: 50%;
-    border-top-color: var(--button-primary-bg);
-    animation: spin 1s ease-in-out infinite;
-    margin-bottom: 15px;
+    border-top-color: var(--primary-color);
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
 }
 
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
 
-/* стили для формы температуры */
 .form-group {
     margin-bottom: 15px;
 }
@@ -220,99 +148,79 @@ section {
 .form-group label {
     display: block;
     margin-bottom: 5px;
-    font-weight: bold;
 }
 
 .form-group input {
     width: 100%;
-    padding: 10px;
-    border: 1px solid var(--input-border);
+    padding: 8px;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
-    font-size: 16px;
     background-color: var(--section-bg);
     color: var(--text-color);
 }
 
 .help-text {
     font-size: 12px;
-    color: var(--help-text-color);
+    color: #777;
     margin-top: 5px;
 }
 
-.submit-btn {
-    background-color: var(--button-submit-bg);
+#submitTemp {
+    background-color: var(--success-color);
     color: white;
     border: none;
-    padding: 10px 15px;
+    padding: 8px 12px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 16px;
 }
 
-.submit-btn:hover {
-    background-color: var(--button-submit-hover);
+#submitTemp:hover {
+    opacity: 0.9;
 }
 
-.submit-btn:disabled {
-    background-color: var(--button-disabled-bg);
+#submitTemp:disabled {
+    opacity: 0.5;
     cursor: not-allowed;
 }
 
-/* стили для toast-уведомлений */
-.toast-container {
+#toastContainer {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
+    bottom: 15px;
+    right: 15px;
+    z-index: 100;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .toast {
-    min-width: 250px;
-    max-width: 350px;
-    padding: 15px;
+    min-width: 200px;
+    padding: 10px;
     border-radius: 4px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transition: opacity 0.3s, transform 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     opacity: 0;
-    transform: translateY(20px);
+    transition: opacity 0.3s;
 }
 
 .toast.show {
     opacity: 1;
-    transform: translateY(0);
 }
 
 .toast.success {
-    background-color: #2ecc71;
+    background-color: var(--success-color);
     color: white;
 }
 
 .toast.error {
-    background-color: #e74c3c;
+    background-color: var(--error-color);
     color: white;
-}
-
-.toast-message {
-    flex-grow: 1;
-    margin-right: 15px;
 }
 
 .toast-close {
     background: none;
     border: none;
     color: white;
-    font-size: 16px;
     cursor: pointer;
-    opacity: 0.8;
-    transition: opacity 0.2s;
-}
-
-.toast-close:hover {
-    opacity: 1;
 }
